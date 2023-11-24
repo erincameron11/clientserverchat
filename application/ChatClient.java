@@ -10,6 +10,7 @@ import java.net.*;
 import java.io.*;
 
 public class ChatClient {
+	// Define final variables for ANSI terminal colouring
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
@@ -17,8 +18,11 @@ public class ChatClient {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_RED = "\u001B[31m";
 
+	// Method: main method for running the program
 	public static void main(String[] args) throws Exception {
+		// bash code to rename the Terminal window
 		System.out.print("\"\033]0;CLIENT\007\"");
+		
 		// Create input from the client
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -49,7 +53,7 @@ public class ChatClient {
 		System.out.print("\033[H\033[2J");  
 	    System.out.flush();  
 		
-	    // Loop until the client enters "end" and the server responds "bye"
+	    // Loop until the client enters "quit" and the server responds "bye"
 		while (true) {
 			System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET); // Print the display name of the client
 			s = input.readLine(); // Read the line entered by the client
@@ -58,7 +62,7 @@ public class ChatClient {
 			s = dataIn.readLine(); // Read the line from the server
 			System.out.print(ANSI_CYAN + "\b\b\b\b\b\b\b\b\b\b\bServer: " + ANSI_RESET + s + "\n"); // Delete the server-is-responding text and print the line from the server
 			
-			// If the client has initiated an "end", terminate
+			// If the client has initiated an "quit", terminate
 			if (s.equalsIgnoreCase("BYE")) {
 				System.out.println(ANSI_RED + "\n*** Connection terminated ***\n" + ANSI_RESET); // error for some reason
 				break;
@@ -76,58 +80,3 @@ public class ChatClient {
 		input.close();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-//// Create input
-////Scanner input = new Scanner(System.in);
-//		
-//// Create a socket on a port
-//Socket socket = new Socket("localhost", 2000);
-//
-//// Create input and output streams, and buffered reader
-////DataInputStream dataInput = new DataInputStream(socket.getInputStream());
-////DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
-//PrintStream dataOutput = new PrintStream(socket.getOutputStream());
-//BufferedReader dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-//
-//// Define new variables
-//String str = "str";
-//String client = "";
-//
-//// Setting the clients nickname
-//System.out.print("Enter a Client Nickname: ");
-//client = userInput.readLine();
-////dataOutput.println(client);
-//
-//while(true) {
-//	System.out.print(client + ": ");
-//	str = dataInput.readLine(); // str = stdin.readLine();
-//	dataOutput.println(str); // sout.println(str);
-//	dataOutput.flush();
-//	str = dataInput.readLine(); // str = sin.readLine();
-//	System.out.print("Server: "+ str +"\n");
-//	if (str.equalsIgnoreCase("end"))
-//		break;
-//}
-//
-////String str = "", str2 = "";
-////while(!str.equals("stop")) {
-////	str = br.readLine();
-////	dataOutput.writeUTF(str);
-////	dataOutput.flush();
-////	str2 = dataInput.readUTF();
-////	System.out.println("Server says: " + str2);
-////}
-//
-//dataInput.close(); // close the data input stream
-//socket.close(); // close the socket
-//userInput.close(); // close the input

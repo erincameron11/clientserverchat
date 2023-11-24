@@ -10,6 +10,7 @@ import java.net.*;
 import java.io.*;
 
 public class ChatServer {
+	// Define final variables for ANSI terminal colouring
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
@@ -17,8 +18,11 @@ public class ChatServer {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_RED = "\u001B[31m";
 
+	// Method: main method for running the program
 	public static void main(String[] args) throws Exception {
+		// bash code to rename the Terminal window
 		System.out.print("\"\033]0;SERVER\007\"");
+		
 		// Create a socket
 		int port = 2000;
 		ServerSocket ss = new ServerSocket(port);
@@ -44,12 +48,12 @@ public class ChatServer {
 	    System.out.flush(); 
 	    System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET + "...");
 	    
-		// Loop until the client enters "end"
+		// Loop until the client enters "quit"
 		while (true) {
 			s = dataIn.readLine(); // Read the line entered by the client
 			
-			// If the entered text from the client is "end", terminate
-			if (s.equalsIgnoreCase("end")) {
+			// If the entered text from the client is "quit", terminate
+			if (s.equalsIgnoreCase("quit")) {
 				dataOut.println("Bye");
 				System.out.print(ANSI_PURPLE + findBackspaces(client) + client + ": " + ANSI_RESET + s + "\n");
 				System.out.println(ANSI_RED + "\n*** Connection terminated by " + client + " ***\n" + ANSI_RESET);
@@ -79,61 +83,15 @@ public class ChatServer {
 	
 	
 	// Utility Method: used to erase the "<clientname>: ..." from the CLI
-	public static String findBackspaces(String client ) {
+	public static String findBackspaces(String client) {
 		// Find the number of backspaces required to append to the string
-		String backspaces = "";
+		String clientName = "";
+		
+		// Loop through and append the backspaces to the string
 		for(int i = 0; i < (client.length() + 7); i++) {
-			backspaces = backspaces + "\b";
+			clientName = clientName + "\b";
 		}
-		return backspaces;
+		return clientName;
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-//// Create a server socket
-//ServerSocket serverSocket = new ServerSocket(2000);
-//Socket socket = serverSocket.accept();
-//
-//// Create input and output streams
-////DataInputStream dataInput = new DataInputStream(socket.getInputStream());
-////DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
-//PrintStream dataOutput = new PrintStream(socket.getOutputStream());
-//BufferedReader dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-//String str = "str";
-//
-//// Get the clients name
-//String client = dataInput.readLine();
-//System.out.print(client);
-//
-//// Loop until the client enters "end"
-//while(true) {
-//	str = dataInput.readLine();
-//	
-//	// If the text entered is "end", quit
-//	if(str.equalsIgnoreCase("end")) {
-//		break;
-//	}
-//	
-//	System.out.print(client + ": " + str + "\n");
-//	System.out.print("Server: ");
-//	str = userInput.readLine();
-////	System.out.print(str);
-//	dataOutput.println(str);
-//	dataOutput.flush();
-//}
-//
-//
-//dataInput.close(); // close the data input stream
-//dataOutput.close(); // close the data output stream
-//socket.close();
-//serverSocket.close(); // close the socket
