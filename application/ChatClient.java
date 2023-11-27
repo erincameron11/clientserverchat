@@ -1,11 +1,5 @@
 package application;
 
-/* TO RUN: 
-* 			1. Open two separate Terminal windows and navigate to this directory 
-* 			2. In the first window, type "javac MyServer.java" followed by "java MyServer.java" 
-* 			3. In the second window, type "javac MyClient.java" followed by "java MyClient.java" 
-* 			You can now message back an forth on each Terminal window */
-
 import java.net.*;
 import java.io.*;
 
@@ -40,31 +34,44 @@ public class ChatClient {
 		PrintStream dataOut = new PrintStream(sk.getOutputStream());
 		
 		// Declare and initialize variables
-		String s;
+		String message;
 		String client = "";
 		
 		// Setting the clients nickname
 		System.out.println(ANSI_GREEN + "\nConnection established on IP address " + ip + "\n" + ANSI_RESET);
 		System.out.print("Enter a Client Nickname: ");
 		client = input.readLine();
+		
+		// Sending the clients nickname to the server
 		dataOut.println(client);
 		
 		// Clear the terminal screen
 		System.out.print("\033[H\033[2J");  
 	    System.out.flush();  
 		
-	    // Loop until the client enters "quit" and the server responds "bye"
+	    // Loop until the client enters "quit" and the server responds "Terminated"
 		while (true) {
-			System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET); // Print the display name of the client
-			s = input.readLine(); // Read the line entered by the client
-			dataOut.println(s); // Send the line to the output stream (server)
-			System.out.print(ANSI_CYAN + "Server: " + ANSI_RESET + "..."); // Print the server-is-responding text
-			s = dataIn.readLine(); // Read the line from the server
-			System.out.print(ANSI_CYAN + "\b\b\b\b\b\b\b\b\b\b\bServer: " + ANSI_RESET + s + "\n"); // Delete the server-is-responding text and print the line from the server
+			// Print the display name of the client
+			System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET);
 			
-			// If the client has initiated an "quit", terminate
-			if (s.equalsIgnoreCase("BYE")) {
-				System.out.println(ANSI_RED + "\n*** Connection terminated ***\n" + ANSI_RESET); // error for some reason
+			// Read the line entered by the client
+			message = input.readLine();
+			
+			// Send the line to the output stream (server)
+			dataOut.println(message);
+			
+			// Print the server-is-responding text "Server: ..."
+			System.out.print(ANSI_CYAN + "Server: " + ANSI_RESET + "...");
+			
+			// Read the line from the server
+			message = dataIn.readLine();
+			
+			// Delete the server-is-responding text and print the line from the server
+			System.out.print(ANSI_CYAN + "\b\b\b\b\b\b\b\b\b\b\bServer: " + ANSI_RESET + message + "\n");
+			
+			// If the client has initiated a "quit", terminate
+			if (message.equalsIgnoreCase("TERMINATED")) {
+				System.out.println(ANSI_RED + "\n*** Connection terminated ***\n" + ANSI_RESET);
 				break;
 			}
 		}

@@ -1,11 +1,5 @@
 package application;
 
-/* TO RUN: 
-* 			1. Open two separate Terminal windows and navigate to this directory 
-* 			2. In the first window, type "javac MyServer.java" followed by "java MyServer.java" 
-* 			3. In the second window, type "javac MyClient.java" followed by "java MyClient.java" 
-* 			You can now message back an forth on each Terminal window */
-
 import java.net.*;
 import java.io.*;
 
@@ -23,7 +17,7 @@ public class ChatServer {
 		// bash code to rename the Terminal window
 		System.out.print("\"\033]0;SERVER\007\"");
 		
-		// Create a socket
+		// Create a port and socket on that port
 		int port = 2000;
 		ServerSocket ss = new ServerSocket(port);
 		
@@ -37,8 +31,8 @@ public class ChatServer {
 		PrintStream dataOut = new PrintStream(sk.getOutputStream());
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		// Declare string variable
-		String s;
+		// Declare string variables
+		String message;
 		
 		// Get the clients name from the client
 		String client = dataIn.readLine();
@@ -46,25 +40,43 @@ public class ChatServer {
 		// Clear the terminal screen
 		System.out.print("\033[H\033[2J");  
 	    System.out.flush(); 
+	    
+	    // Display the client-is-responding text "<ClientName>: ..."
 	    System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET + "...");
 	    
 		// Loop until the client enters "quit"
 		while (true) {
-			s = dataIn.readLine(); // Read the line entered by the client
+			// Read the line entered by the client
+			message = dataIn.readLine();
 			
 			// If the entered text from the client is "quit", terminate
-			if (s.equalsIgnoreCase("quit")) {
-				dataOut.println("Bye");
-				System.out.print(ANSI_PURPLE + findBackspaces(client) + client + ": " + ANSI_RESET + s + "\n");
+			if (message.equalsIgnoreCase("quit")) {
+				dataOut.println("Terminated");
+				
+				// Delete the client-is-responding text and print the line from the client
+				System.out.print(ANSI_PURPLE + findBackspaces(client) + client + ": " + ANSI_RESET + message + "\n");
+				
+				// Display that the connection was terminated
 				System.out.println(ANSI_RED + "\n*** Connection terminated by " + client + " ***\n" + ANSI_RESET);
+				
+				// Exit the loop
 				break;
 			}
 			
-			System.out.print(ANSI_PURPLE + findBackspaces(client) + client + ": " + ANSI_RESET + s + "\n"); // Delete the client-is-responding text and print the line entered by client
+			// Delete the client-is-responding text and print the line entered by client
+			System.out.print(ANSI_PURPLE + findBackspaces(client) + client + ": " + ANSI_RESET + message + "\n");
+			
+			// Print the display name of the server
 			System.out.print(ANSI_CYAN + "Server: " + ANSI_RESET);
-			s = input.readLine(); // Get the line entered by the server
-			dataOut.println(s); // Send the line from the server to the client
-			System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET + "..."); // Print the client-is-responding text
+			
+			// Get the line entered by the server
+			message = input.readLine();
+			
+			// Send the line from the server to the client
+			dataOut.println(message);
+			
+			// Print the client-is-responding text
+			System.out.print(ANSI_PURPLE + client + ": " + ANSI_RESET + "...");
 		}
 		
 		// Close the server socket
